@@ -129,8 +129,8 @@ function Dashboard() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Win/Loss Pie Chart */}
-        <div className="card">
-          <h3 className="text-lg font-semibold text-text-primary mb-4">Win/Loss Distribution</h3>
+        <div className="bg-gradient-card border border-dark-border rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+          <h3 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-6">Win/Loss Distribution</h3>
           {stats.closedTrades > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
@@ -158,8 +158,8 @@ function Dashboard() {
         </div>
 
         {/* Monthly Performance */}
-        <div className="card">
-          <h3 className="text-lg font-semibold text-text-primary mb-4">Monthly Performance</h3>
+        <div className="bg-gradient-card border border-dark-border rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+          <h3 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-6">Monthly Performance</h3>
           {monthlyData.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={monthlyData}>
@@ -189,9 +189,9 @@ function Dashboard() {
 
       {/* Additional Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="card">
-          <h3 className="text-lg font-semibold text-text-primary mb-4">Performance Metrics</h3>
-          <div className="space-y-3">
+        <div className="bg-gradient-card border border-dark-border rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+          <h3 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-6">Performance Metrics</h3>
+          <div className="space-y-4">
             <div className="flex justify-between">
               <span className="text-text-secondary">Average Win:</span>
               <span className="text-accent-green font-medium">${stats.avgWin.toFixed(2)}</span>
@@ -209,9 +209,9 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className="card">
-          <h3 className="text-lg font-semibold text-text-primary mb-4">Trade Summary</h3>
-          <div className="space-y-3">
+        <div className="bg-gradient-card border border-dark-border rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+          <h3 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-6">Trade Summary</h3>
+          <div className="space-y-4">
             <div className="flex justify-between">
               <span className="text-text-secondary">Winning Trades:</span>
               <span className="text-accent-green font-medium">{stats.winningTrades}</span>
