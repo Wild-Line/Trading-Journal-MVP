@@ -41,13 +41,15 @@ function ActiveTrades() {
     try {
       const exit = parseFloat(exitPrice);
       const avgEntry = closingTrade.averageEntry;
-      const quantity = closingTrade.quantity || 1;
+      const tradeValue = closingTrade.tradeValue || closingTrade.cost || 1;
       
       let finalPnL;
       if (closingTrade.direction === 'long') {
-        finalPnL = (exit - avgEntry) * quantity;
+        // For long positions: (exit - entry) / entry * tradeValue
+        finalPnL = ((exit - avgEntry) / avgEntry) * tradeValue;
       } else {
-        finalPnL = (avgEntry - exit) * quantity;
+        // For short positions: (entry - exit) / entry * tradeValue
+        finalPnL = ((avgEntry - exit) / avgEntry) * tradeValue;
       }
 
       await updateDoc(doc(db, 'trades', closingTrade.id), {
@@ -76,12 +78,14 @@ function ActiveTrades() {
 
   const calculateUnrealizedPnL = (trade, currentPrice = null) => {
     if (!currentPrice) return 0;
-    const quantity = trade.quantity || 1;
+    const tradeValue = trade.tradeValue || trade.cost || 1;
     
     if (trade.direction === 'long') {
-      return (currentPrice - trade.averageEntry) * quantity;
+      // For long positions: (current - entry) / entry * tradeValue
+      return ((currentPrice - trade.averageEntry) / trade.averageEntry) * tradeValue;
     } else {
-      return (trade.averageEntry - currentPrice) * quantity;
+      // For short positions: (entry - current) / entry * tradeValue
+      return ((trade.averageEntry - currentPrice) / trade.averageEntry) * tradeValue;
     }
   };
 
@@ -133,8 +137,15 @@ function ActiveTrades() {
                     {trade.direction === 'long' ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-text-primary">{trade.ticker}</h3>
-                    <p className="text-text-secondary capitalize">{trade.direction} Position</p>
+                    <h3 className="text-lg font-semibold text-text-primary">{trade.ticker}</h3>
+                    <p className="text-text-secondary text-sm capitalize">
+                      {trade.direction} • {trade.cost ? `Cost: ${formatCurrency(trade.cost)} • ` : ''}Entry: {formatCurrency(trade.averageEntry)}
+                    </p>
+                    {trade.leverage && trade.leverage !== '1:1' && (
+                      <p className="text-text-secondary text-xs">
+                        Leverage: {trade.leverage} • Trade Value: {formatCurrency(trade.tradeValue || trade.cost || 0)}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -261,12 +272,12 @@ function ActiveTrades() {
                     Estimated P&L: {
                       (() => {
                         const exit = parseFloat(exitPrice);
-                        const quantity = closingTrade.quantity || 1;
+                        const tradeValue = closingTrade.tradeValue || closingTrade.cost || 1;
                         let pnl;
                         if (closingTrade.direction === 'long') {
-                          pnl = (exit - closingTrade.averageEntry) * quantity;
+                          pnl = ((exit - closingTrade.averageEntry) / closingTrade.averageEntry) * tradeValue;
                         } else {
-                          pnl = (closingTrade.averageEntry - exit) * quantity;
+                          pnl = ((closingTrade.averageEntry - exit) / closingTrade.averageEntry) * tradeValue;
                         }
                         return (
                           <span className={pnl >= 0 ? 'text-accent-green' : 'text-accent-red'}>
