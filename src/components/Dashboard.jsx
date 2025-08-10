@@ -9,6 +9,7 @@ function Dashboard() {
   const { currentUser } = useAuth();
   const [trades, setTrades] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [timeFrame, setTimeFrame] = useState('monthly');
 
   useEffect(() => {
     if (!currentUser) return;
@@ -41,6 +42,9 @@ function Dashboard() {
     const winRate = closedTrades.length > 0 ? (winningTrades.length / closedTrades.length) * 100 : 0;
     const avgWin = winningTrades.length > 0 ? winningTrades.reduce((sum, trade) => sum + trade.finalPnL, 0) / winningTrades.length : 0;
     const avgLoss = losingTrades.length > 0 ? Math.abs(losingTrades.reduce((sum, trade) => sum + trade.finalPnL, 0) / losingTrades.length) : 0;
+    const totalWins = winningTrades.reduce((sum, trade) => sum + trade.finalPnL, 0);
+    const totalLosses = Math.abs(losingTrades.reduce((sum, trade) => sum + trade.finalPnL, 0));
+    const netProfit = totalWins - totalLosses;
 
     return {
       totalTrades: trades.length,
@@ -51,30 +55,58 @@ function Dashboard() {
       avgWin,
       avgLoss,
       winningTrades: winningTrades.length,
-      losingTrades: losingTrades.length
+      losingTrades: losingTrades.length,
+      totalWins,
+      totalLosses,
+      netProfit
     };
   };
 
   const stats = calculateStats();
 
   const pieData = [
-    { name: 'Winning Trades', value: stats.winningTrades, color: '#10b981' },
-    { name: 'Losing Trades', value: stats.losingTrades, color: '#ef4444' }
+    { name: 'Winning Trades', value: stats.winningTrades, color: '#14F195' }, // primary-green
+    { name: 'Losing Trades', value: stats.losingTrades, color: '#FF6BE1' } // accent-pink
   ];
 
-  const monthlyData = trades
-    .filter(trade => trade.status === 'closed' && trade.closedAt)
-    .reduce((acc, trade) => {
-      const month = new Date(trade.closedAt.toDate()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-      const existing = acc.find(item => item.month === month);
+  const getTimeFrameData = () => {
+    const closedTrades = trades.filter(trade => trade.status === 'closed' && trade.closedAt);
+    
+    const groupedData = closedTrades.reduce((acc, trade) => {
+      const date = new Date(trade.closedAt.toDate());
+      let key;
+      
+      switch (timeFrame) {
+        case 'daily':
+          key = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+          break;
+        case 'weekly':
+          const weekStart = new Date(date);
+          weekStart.setDate(date.getDate() - date.getDay());
+          key = weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+          break;
+        case 'yearly':
+          key = date.getFullYear().toString();
+          break;
+        default: // monthly
+          key = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+      }
+      
+      const existing = acc.find(item => item.period === key);
       if (existing) {
         existing.profit += trade.finalPnL || 0;
       } else {
-        acc.push({ month, profit: trade.finalPnL || 0 });
+        acc.push({ period: key, profit: trade.finalPnL || 0 });
       }
       return acc;
-    }, [])
-    .slice(-6); // Last 6 months
+    }, []);
+    
+    // Sort by date and limit results
+    const limit = timeFrame === 'daily' ? 30 : timeFrame === 'weekly' ? 12 : timeFrame === 'yearly' ? 5 : 6;
+    return groupedData.slice(-limit);
+  };
+  
+  const performanceData = getTimeFrameData();
 
   if (loading) {
     return (
@@ -142,9 +174,10 @@ function Dashboard() {
                   outerRadius={100}
                   paddingAngle={5}
                   dataKey="value"
+                  stroke="none"
                 >
                   {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
+                    <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
                   ))}
                 </Pie>
                 <Tooltip />
@@ -157,31 +190,53 @@ function Dashboard() {
           )}
         </div>
 
-        {/* Monthly Performance */}
+        {/* Performance Chart */}
         <div className="bg-gradient-card border border-dark-border rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
-          <h3 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-6">Monthly Performance</h3>
-          {monthlyData.length > 0 ? (
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">Performance Overview</h3>
+            <div className="flex bg-dark-surface rounded-lg p-1 border border-dark-border">
+              {['daily', 'weekly', 'monthly', 'yearly'].map((period) => (
+                <button
+                  key={period}
+                  onClick={() => setTimeFrame(period)}
+                  className={`px-3 py-1 text-sm font-medium rounded-md transition-all duration-200 capitalize ${
+                    timeFrame === period
+                      ? 'bg-primary-purple text-white shadow-lg'
+                      : 'text-gray-400 hover:text-white hover:bg-dark-border'
+                  }`}
+                >
+                  {period}
+                </button>
+              ))}
+            </div>
+          </div>
+          {performanceData.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={monthlyData}>
-                <XAxis dataKey="month" tick={{ fill: '#9ca3af' }} />
-                <YAxis tick={{ fill: '#9ca3af' }} />
+              <BarChart data={performanceData}>
+                <XAxis dataKey="period" tick={{ fill: '#9ca3af' }} stroke="none" />
+                <YAxis tick={{ fill: '#9ca3af' }} stroke="none" />
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: '#1a1b1e', 
-                    border: '1px solid #2a2d31',
-                    borderRadius: '8px'
+                    backgroundColor: '#121826', 
+                    border: '1px solid #1e2536',
+                    borderRadius: '8px',
+                    color: '#ffffff'
                   }}
                 />
                 <Bar 
                   dataKey="profit" 
-                  fill={(entry) => entry.profit >= 0 ? '#10b981' : '#ef4444'}
                   radius={[4, 4, 0, 0]}
-                />
+                  stroke="none"
+                >
+                  {performanceData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.profit >= 0 ? '#14F195' : '#FF6BE1'} stroke="none" />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           ) : (
             <div className="flex items-center justify-center h-64 text-text-secondary">
-              No monthly data available
+              No {timeFrame} data available
             </div>
           )}
         </div>
@@ -201,9 +256,9 @@ function Dashboard() {
               <span className="text-accent-red font-medium">-${stats.avgLoss.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-text-secondary">Profit Factor:</span>
-              <span className="text-text-primary font-medium">
-                {stats.avgLoss > 0 ? (stats.avgWin / stats.avgLoss).toFixed(2) : 'N/A'}
+              <span className="text-text-secondary">Net Profit:</span>
+              <span className={`font-medium ${stats.netProfit >= 0 ? 'text-primary-green' : 'text-accent-pink'}`}>
+                ${stats.netProfit.toFixed(2)}
               </span>
             </div>
           </div>
