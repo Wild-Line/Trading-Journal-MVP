@@ -46,6 +46,30 @@
     border-radius: 4px 0 0 4px;
   }
   
+  .card-stat-profit::before {
+    background: linear-gradient(180deg, #14F195 0%, #B5FF3B 100%); /* Aqua → Lime */
+  }
+  
+  .card-stat-loss::before {
+    background: linear-gradient(180deg, #FF7E36 0%, #FFD60A 100%); /* Orange → Yellow */
+  }
+  
+  .card-stat-blue::before {
+    background: linear-gradient(180deg, #3A0CA3 0%, #9945FF 100%); /* Deep Indigo → Purple */
+  }
+  
+  .card-stat-purple::before {
+    background: linear-gradient(180deg, #FF6BE1 0%, #8E44AD 100%); /* Pink → Purple */
+  }
+  
+  .card-stat-cyan::before {
+    background: linear-gradient(180deg, #00D1D1 0%, #0077B6 100%); /* Cyan → Teal Blue */
+  }
+  
+  .card-stat-electric::before {
+    background: linear-gradient(180deg, #00B4D8 0%, #FF2E9D 100%); /* Electric Blue → Magenta */
+  }
+  
   .table-row {
     @apply border-b border-dark-border hover:bg-dark-surface/50 transition-colors duration-200;
   }

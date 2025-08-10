@@ -111,7 +111,7 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className={`card-stat group ${stats.activeTrades > 0 ? 'card-stat-profit' : 'card-stat-cyan'}`}>
+        <div className={`card-stat group ${stats.activeTrades > 0 ? 'card-stat-electric' : 'card-stat-cyan'}`}>
           <div>
             <p className="text-text-secondary text-sm font-medium uppercase tracking-wider">Active Trades</p>
             <p className={`text-3xl font-bold mt-2 ${stats.activeTrades > 0 ? 'text-primary-green' : 'text-muted-cyan'}`}>{stats.activeTrades}</p>
