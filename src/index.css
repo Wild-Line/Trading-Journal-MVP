@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-accent-blue hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-dark-surface hover:bg-gray-700 text-text-primary border border-dark-border font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-success {
+    @apply bg-accent-green hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-danger {
+    @apply bg-accent-red hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .input-field {
+    @apply bg-dark-surface border border-dark-border text-text-primary rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-transparent;
+  }
+  
+  .card {
+    @apply bg-dark-surface border border-dark-border rounded-lg p-6;
+  }
+  
+  .table-row {
+    @apply border-b border-dark-border hover:bg-dark-surface/50 transition-colors duration-200;
+  }
+}
