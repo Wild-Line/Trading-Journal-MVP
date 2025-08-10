@@ -18,22 +18,18 @@ function Header() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-dark-surface border-b border-dark-border z-50">
+    <header className="fixed top-0 left-0 right-0 bg-gradient-card/95 backdrop-blur-md border-b border-dark-border z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-8">
-            <Link to="/" className="flex items-center space-x-2">
-              <BarChart3 className="h-8 w-8 text-accent-blue" />
-              <span className="text-xl font-bold text-text-primary">Trading Journal</span>
-            </Link>
-            
-            <nav className="hidden md:flex space-x-6">
+          <div className="flex-1"></div>
+          
+          <nav className="flex space-x-6">
               <Link
                 to="/"
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
                   isActive('/') 
-                    ? 'bg-accent-blue text-white' 
-                    : 'text-text-secondary hover:text-text-primary hover:bg-dark-bg'
+                    ? 'bg-gradient-primary text-white shadow-lg transform scale-105' 
+                    : 'text-text-secondary hover:text-text-primary hover:bg-dark-surface/50'
                 }`}
               >
                 <BarChart3 className="h-4 w-4" />
@@ -42,10 +38,10 @@ function Header() {
               
               <Link
                 to="/active-trades"
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
                   isActive('/active-trades') 
-                    ? 'bg-accent-blue text-white' 
-                    : 'text-text-secondary hover:text-text-primary hover:bg-dark-bg'
+                    ? 'bg-gradient-primary text-white shadow-lg transform scale-105' 
+                    : 'text-text-secondary hover:text-text-primary hover:bg-dark-surface/50'
                 }`}
               >
                 <TrendingUp className="h-4 w-4" />
@@ -54,25 +50,26 @@ function Header() {
               
               <Link
                 to="/trade-history"
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
                   isActive('/trade-history') 
-                    ? 'bg-accent-blue text-white' 
-                    : 'text-text-secondary hover:text-text-primary hover:bg-dark-bg'
+                    ? 'bg-gradient-primary text-white shadow-lg transform scale-105' 
+                    : 'text-text-secondary hover:text-text-primary hover:bg-dark-surface/50'
                 }`}
               >
                 <History className="h-4 w-4" />
                 <span>Trade History</span>
               </Link>
             </nav>
-          </div>
           
-          <button
-            onClick={handleLogout}
-            className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-dark-bg transition-colors"
-          >
-            <LogOut className="h-4 w-4" />
-            <span>Logout</span>
-          </button>
+          <div className="flex-1 flex justify-end">
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium text-text-secondary hover:text-white hover:bg-gradient-accent transition-all duration-300 hover:scale-105 hover:shadow-lg"
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Logout</span>
+            </button>
+          </div>
         </div>
       </div>
     </header>

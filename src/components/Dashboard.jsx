@@ -85,53 +85,43 @@ function Dashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-text-primary">Trading Dashboard</h1>
-        <p className="text-text-secondary mt-2">Overview of your trading performance</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mb-12 text-center">
+        <h1 className="text-5xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4">
+          Trading Dashboard
+        </h1>
+        <p className="text-text-secondary text-lg">Professional trade tracking and performance analytics</p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-text-secondary text-sm">Total P&L</p>
-              <p className={`text-2xl font-bold ${stats.totalProfit >= 0 ? 'text-accent-green' : 'text-accent-red'}`}>
-                ${stats.totalProfit.toFixed(2)}
-              </p>
-            </div>
-            <DollarSign className={`h-8 w-8 ${stats.totalProfit >= 0 ? 'text-accent-green' : 'text-accent-red'}`} />
+        <div className={`card-stat group ${stats.totalProfit >= 0 ? 'card-stat-profit' : 'card-stat-loss'}`}>
+          <div>
+            <p className="text-text-secondary text-sm font-medium uppercase tracking-wider">Total P&L</p>
+            <p className={`text-3xl font-bold mt-2 ${stats.totalProfit >= 0 ? 'text-primary-green' : 'text-accent-red'}`}>
+              ${stats.totalProfit.toFixed(2)}
+            </p>
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-text-secondary text-sm">Win Rate</p>
-              <p className="text-2xl font-bold text-text-primary">{stats.winRate.toFixed(1)}%</p>
-            </div>
-            <Target className="h-8 w-8 text-accent-blue" />
+        <div className="card-stat group card-stat-blue">
+          <div>
+            <p className="text-text-secondary text-sm font-medium uppercase tracking-wider">Win Rate</p>
+            <p className="text-3xl font-bold text-midpoint-blue mt-2">{stats.winRate.toFixed(1)}%</p>
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-text-secondary text-sm">Active Trades</p>
-              <p className="text-2xl font-bold text-text-primary">{stats.activeTrades}</p>
-            </div>
-            <Activity className="h-8 w-8 text-accent-blue" />
+        <div className={`card-stat group ${stats.activeTrades > 0 ? 'card-stat-profit' : 'card-stat-cyan'}`}>
+          <div>
+            <p className="text-text-secondary text-sm font-medium uppercase tracking-wider">Active Trades</p>
+            <p className={`text-3xl font-bold mt-2 ${stats.activeTrades > 0 ? 'text-primary-green' : 'text-muted-cyan'}`}>{stats.activeTrades}</p>
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-text-secondary text-sm">Total Trades</p>
-              <p className="text-2xl font-bold text-text-primary">{stats.totalTrades}</p>
-            </div>
-            <TrendingUp className="h-8 w-8 text-accent-blue" />
+        <div className="card-stat group card-stat-purple">
+          <div>
+            <p className="text-text-secondary text-sm font-medium uppercase tracking-wider">Total Trades</p>
+            <p className="text-3xl font-bold text-primary-purple mt-2">{stats.totalTrades}</p>
           </div>
         </div>
       </div>

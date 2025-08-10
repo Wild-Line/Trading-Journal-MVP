@@ -5,12 +5,14 @@
 @layer base {
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #0B0F19 0%, #121826 100%);
+    background-attachment: fixed;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-accent-blue hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+    @apply bg-gradient-primary hover:shadow-lg text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5;
   }
   
   .btn-secondary {
@@ -29,8 +31,19 @@
     @apply bg-dark-surface border border-dark-border text-text-primary rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-transparent;
   }
   
-  .card {
-    @apply bg-dark-surface border border-dark-border rounded-lg p-6;
+  .card-stat {
+    @apply bg-gradient-card border border-dark-border rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 relative overflow-hidden;
+  }
+  
+  .card-stat::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #9945FF 0%, #3A7BD5 50%, #14F195 100%);
+    border-radius: 4px 0 0 4px;
   }
   
   .table-row {
